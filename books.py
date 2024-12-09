@@ -120,3 +120,14 @@ async def update_book(updated_book = Body()):
 # Replaces the category of title six
 # check by calling the get api of all books
             
+# DELETE
+@app.delete("/books/delete_book/{book_title}")
+async def delete_book(book_title: str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold() == book_title.casefold():
+            BOOKS.pop(i)
+            break
+
+# Request URL
+# http://localhost:8000/books/delete_book/title%20four
+# the title four record is deleted feom the books list, check by calling the all books get api
