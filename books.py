@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import Body, FastAPI
 
 app = FastAPI()         #allows uvicorn to identify that we are creating a web app of fastapi
 
@@ -88,4 +88,11 @@ async def read_author_category_by_query(book_author: str,category: str):
 
 
 # POST
-
+@app.post("/books/create_book")
+async def create_book(new_book = Body()):
+    BOOKS.append(new_book)
+    
+# Request URL: http://localhost:8000/books/create_book
+# Response: null
+# check the new book calling the get api of all books and check
+    
