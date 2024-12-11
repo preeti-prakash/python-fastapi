@@ -61,6 +61,14 @@ async def read_book(book_id : int):
     for book in BOOKS:
         if book.id == book_id:
             return book
+        
+@app.get("/books/")
+async def read_book_by_rating(book_rating: int):
+    book_with_same_ratings = []
+    for book in BOOKS:
+        if book.rating == book_rating:
+            book_with_same_ratings.append(book)
+    return book_with_same_ratings
 
 
 @app.post("/create-book")
