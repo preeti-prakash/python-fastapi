@@ -88,3 +88,11 @@ async def update_book(book_update: BookRequest):
     for i in range(len(BOOKS)):
         if BOOKS[i].id == new_book_update.id:
             BOOKS[i] = new_book_update
+
+
+@app.delete("/books/{book_id}")
+async def delete_book(book_id: int):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == book_id:
+            BOOKS.pop(i)
+            break
