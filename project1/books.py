@@ -1,3 +1,6 @@
+# Project1 - we created an array of BOOKS that holds book objects and performed CRUD operations
+
+
 from fastapi import Body, FastAPI
 
 app = FastAPI()         #allows uvicorn to identify that we are creating a web app of fastapi
@@ -131,3 +134,34 @@ async def delete_book(book_title: str):
 # Request URL
 # http://localhost:8000/books/delete_book/title%20four
 # the title four record is deleted feom the books list, check by calling the all books get api
+        
+
+
+# ASSIGNMENT - 1. Create a new API Endpoint that can fetch all books from a specific author using either Path Parameters or Query Parameters.
+        
+#  Path Parameters
+@app.get("/books/books_author/{book_author}")
+async def get_all_books_by_author(book_author: str):
+    books_of_author = []
+    for book in BOOKS:
+        if book.get('author').casefold() == book_author.casefold():
+            books_of_author.append(book)
+    return books_of_author
+
+
+# Request URL
+# http://localhost:8000/books/books_author/author%20two
+# Response body
+# [
+#   {
+#     "title": "Title Two",
+#     "author": "Author Two",
+#     "category": "science"
+#   },
+#   {
+#     "title": "Title Six",
+#     "author": "Author Two",
+#     "category": "math"
+#   }
+# ]
+
