@@ -1,6 +1,7 @@
 from typing import Optional
-from fastapi import  FastAPI
+from fastapi import  FastAPI, Path, Query, HTTPException
 from pydantic import BaseModel, Field
+from starlette import status
 
 app = FastAPI()
 
@@ -61,13 +62,14 @@ async def read_all_books():
 
 
 @app.get("/books/{book_id}")
-async def read_book(book_id : int):
+async def read_book(book_id : int = Path(gt = 0)):
     for book in BOOKS:
         if book.id == book_id:
             return book
+    raise HTTPException(status_code=404, detail = 'Item not found')
         
 @app.get("/books/")
-async def read_book_by_rating(book_rating: int):
+async def read_book_by_rating(book_rating: int = Query(gt = 0, lt=6)):
     book_with_same_ratings = []
     for book in BOOKS:
         if book.rating == book_rating:
@@ -75,7 +77,7 @@ async def read_book_by_rating(book_rating: int):
     return book_with_same_ratings
 
 @app.get("/books/get_date/{book_published_date}")
-async def get_books_by_date(book_published_date: int):
+async def get_books_by_date(book_published_date: int= Path(gt=1999,lt=2031)):
     books_with_same_published_date = []
     for book in BOOKS:
         if book.published_date == book_published_date:
@@ -96,15 +98,23 @@ def find_book_id(book: Book):
 
 @app.put("/books/update_book")
 async def update_book(book_update: BookRequest):
-    new_book_update = Book(**book_update.model_dump())  
+    book_changed=False
+    new_book_update = Book(**book_update.model_dump())   
     for i in range(len(BOOKS)):
         if BOOKS[i].id == new_book_update.id:
-            BOOKS[i] = new_book_update
+            BOOKS[i] = new_book_update 
+            book_changed = True
+    if not book_changed:
+        raise HTTPException(status_code=404, detail='Book not found')
 
 
 @app.delete("/books/{book_id}")
-async def delete_book(book_id: int):
+async def delete_book(book_id: int = Path(gt = 0)):
+    book_deleted=False
     for i in range(len(BOOKS)):
         if BOOKS[i].id == book_id:
             BOOKS.pop(i)
+            book_deleted= True
             break
+    if not book_deleted:
+        raise HTTPException(status_code=404, detail='Book not found')
