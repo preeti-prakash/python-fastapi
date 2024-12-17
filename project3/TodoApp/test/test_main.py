@@ -1,8 +1,8 @@
+from project3.TodoApp.main import app
 from fastapi.testclient import TestClient
-import main
 from fastapi import status
 
-client = TestClient(main.app)
+client = TestClient(app)
 
 def test_return_health_check():
     response = client.get("/healthy")
